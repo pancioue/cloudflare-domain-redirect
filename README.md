@@ -4,10 +4,10 @@ Cloudflare 批量網域導轉
 方法一、 網頁規則
 ---
 > * `需要的權限Token: 區域-網頁規則-編輯`
-> * 使用網頁規則，dashbord上直接點擊API，就會秀出API，是最直觀的方法
-> * 在 free 方案時沒有辦法加上國別判斷，pro 方案好像可以
+> * 使用網頁規則，dashbord上直接點擊API，就會秀出API的串接資訊
+> * 在 free 方案時沒有辦法加上國別判斷，pro 方案好像可以，若有需要可以參考方法三
 
-基本上接 api 的步驟需要
+串接 api 的步驟
 1. 先取得 zoneId: https://api.cloudflare.com/client/v4/zones?name=[domain_name]
 2. 取得 page rule: https://api.cloudflare.com/client/v4/zones/[zone_id]/pagerules
 3. - 如果沒有rule，新增 post: https://api.cloudflare.com/client/v4/zones/[zone_id]/pagerules
@@ -18,8 +18,8 @@ Cloudflare 批量網域導轉
 ---
 > * 此為方案 free 版本，Pro版也許有更好作法。不過步驟也並不複雜
 > * 此方法須注意 free 方案有使用次數限制
-> * 使用這個方法算是在有大量且頻繁更換網域導轉位置時，可以不用接API的方法
-## 步驟一
+> * 使用這個方法是在有大量且頻繁更換網域導轉位置時，可以不用接API的方法
+#### 步驟一
 1. 到帳號底下建立worker
 ![創建worker](https://github.com/user-attachments/assets/840ea81a-0224-4c0f-8337-c9a60d577bac)
 
@@ -28,19 +28,19 @@ Cloudflare 批量網域導轉
 ![deploy-hello-world](https://github.com/user-attachments/assets/fbfb3c4b-e0a3-4007-9bc4-ff5f8e78c654)
 
 
-## 步驟二
+#### 步驟二
 1. 建立完回到 **Workers 和 Pages**，應該會出現該worker，如圖一畫黑線的地方，可以點擊 *造訪* 測試看看
 2. 進到 worker 後可以點選編輯剛才的 **worker.js**檔
    ![點選編輯worker](https://github.com/user-attachments/assets/fcb7ca94-beda-47f9-b9ec-63eb3708f0a2)
 3. 編輯完要跳轉的邏輯，點選套用即可
    ![編輯完套用](https://github.com/user-attachments/assets/a8069081-c06d-4164-8c84-6c7ddf5dd0a8)
 
-## 步驟三
+#### 步驟三
 1. 到要跳轉的網域設定
    ![要跳轉的網域Workers路由](https://github.com/user-attachments/assets/7719886e-8ded-4b47-b3f2-a53669f250f1)
 2. 寫入想要的規則，點選剛產生的 Worker
 
-## 完成
+#### 完成
 如此一來便算設定完了，所有網域只要設定一次即可。之後如果有導轉網域更換，只要更改 worker.js 裡面的url，便可把所有設定好的網域導轉
 
 方法三、 重新導向轉接規則 (rulesets)
@@ -48,7 +48,7 @@ Cloudflare 批量網域導轉
 > * `需要的權限Token: 區域-單一重新導向轉接-編輯`
 > * 使用網頁規則沒辦法設定一些邏輯判斷，例如判斷來源國家，這時可以使用重新導向轉接規則
 
-接 api 大致跟網頁規則差不多，稍微有點不同，只是範例比較難找
+接 api 大致跟網頁規則差不多，稍微有點不同，但範例比較難找
 1. 先取得 zoneId: https://api.cloudflare.com/client/v4/zones?name=[domain_name]
 2. 這個例子要新增 http_request_dynamic_redirect，http_request_dynamic_redirect 在 rulesets 中似乎只能有一個  
    直接新增 rulesets: post: https://api.cloudflare.com/client/v4/zones/[zond_id]/rulesets
